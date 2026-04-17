@@ -668,7 +668,7 @@
     <!-- Submit -->
     <div class="submit-wrap form-section">
       <button class="btn-submit" id="submitBtn" type="button">
-        <span>Submit Feedback</span>
+        <span>Send via WhatsApp</span>
       </button>
     </div>
 
@@ -681,10 +681,14 @@
     <p>Your feedback means everything. It helps Nailed by Mbuyi continue delivering beautiful, detail-driven work — one set at a time.</p>
   </div>
 
-  <footer>
+    <footer>
     <a href="https://wa.me/26878166787" target="_blank">WhatsApp</a> &nbsp;·&nbsp;
     <a href="https://instagram.com/nailed_by_mbuyi" target="_blank">@nailed_by_mbuyi</a> &nbsp;·&nbsp;
     Mbabane, Opposite Eswatini Railway
+    <br /><br />
+    <span style="font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--muted);">
+      Built by <strong style="color:var(--gold); font-weight:500;">MAGUJWA</strong>
+    </span>
   </footer>
 
   <script>
@@ -752,7 +756,75 @@
         submittedAt: new Date().toISOString()
       };
 
-      console.log('Feedback payload:', payload);
+      const selectedHighlights = payload.highlights.length
+        ? payload.highlights.map(item => item.replace(/_/g, ' ')).join(', ')
+        : 'None selected';
+
+      const message =
+        `🌸 *NAILED BY MBUYI — CLIENT FEEDBACK*
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `*CLIENT DETAILS*
+` +
+        `Name: ${payload.name}
+` +
+        `Phone: ${payload.phone || 'Not provided'}
+` +
+        `Visit Date: ${payload.visitDate}
+` +
+        `Service: ${payload.service}
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `*RATINGS*
+` +
+        `Overall Experience: ${payload.ratings.overall || 0}/5
+` +
+        `Nail Quality & Finish: ${payload.ratings.quality || 0}/5
+` +
+        `Hygiene & Cleanliness: ${payload.ratings.hygiene || 0}/5
+` +
+        `Value for Money: ${payload.ratings.value || 0}/5
+` +
+        `Artist Skill & Detail: ${payload.ratings.artist || 0}/5
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `*RECOMMENDATION*
+` +
+        `Likelihood to Recommend: ${payload.nps ?? 'Not selected'}/10
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `*VISIT HIGHLIGHTS*
+` +
+        `Highlights: ${selectedHighlights}
+` +
+        `Found Us Via: ${payload.howFound || 'Not provided'}
+` +
+        `Follow Up Requested: ${payload.followup === 'yes' ? 'Yes' : 'No'}
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `*ADDITIONAL FEEDBACK*
+` +
+        `${payload.feedback || 'No additional feedback provided.'}
+
+` +
+        `━━━━━━━━━━━━━━━━━━
+` +
+        `Submitted: ${new Date(payload.submittedAt).toLocaleString()}`;
+
+      const phone = "26878166787";
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+      window.open(url, "_blank");
 
       // Transition to success
       document.getElementById('formPage').style.display = 'none';
