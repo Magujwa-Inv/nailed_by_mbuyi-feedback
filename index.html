@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Feedback — Nailed by Mbuyi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0a0b;
+      --bg-card: #141011;
+      --bg-input: #1a1315;
+      --burgundy: #8c1c35;
+      --burgundy-light: #b02444;
+      --gold: #c9a462;
+      --gold-light: #e2c08a;
+      --pink: #e8b4b8;
+      --pink-muted: #c49498;
+      --white: #f5f0eb;
+      --muted: #7a6a6e;
+      --border: #2a1f22;
+      --border-focus: #8c1c35;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Jost', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ── Hero header ── */
+    .hero {
+      position: relative;
+      padding: 64px 24px 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(140,28,53,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo-mark {
+      font-family: var(--serif);
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.1s forwards;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 7vw, 64px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.25s forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--pink);
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 14px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+
+    /* ── Main layout ── */
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-family: var(--serif);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 32px;
+      color: var(--white);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--pink);
+    }
+
+    /* ── Form groups ── */
+    .form-section {
+      margin-bottom: 52px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .form-section:nth-child(1) { animation-delay: 0.15s; }
+    .form-section:nth-child(2) { animation-delay: 0.25s; }
+    .form-section:nth-child(3) { animation-delay: 0.35s; }
+    .form-section:nth-child(4) { animation-delay: 0.45s; }
+    .form-section:nth-child(5) { animation-delay: 0.55s; }
+    .form-section:nth-child(6) { animation-delay: 0.65s; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-bottom-color: #3a2a2d;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.3s ease, background 0.3s ease;
+      border-radius: 1px;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--burgundy);
+      background: #1f1417;
+      box-shadow: 0 1px 0 0 var(--burgundy);
+    }
+
+    input::placeholder, textarea::placeholder { color: #4a3a3e; }
+
+    select option { background: #1a1315; }
+
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+      line-height: 1.6;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.4) sepia(1) saturate(3) hue-rotate(310deg);
+      cursor: pointer;
+    }
+
+    /* ── Star ratings ── */
+    .rating-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .rating-row-label {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      flex: 1;
+    }
+
+    .stars {
+      display: flex;
+      gap: 6px;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #2f2024;
+      transition: color 0.15s ease, transform 0.15s ease;
+      padding: 2px;
+      line-height: 1;
+    }
+
+    .star-btn:hover,
+    .star-btn.filled {
+      color: var(--gold);
+    }
+
+    .star-btn:hover { transform: scale(1.15); }
+
+    /* ── NPS ── */
+    .nps-track {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .nps-btn {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 1px;
+      font-weight: 400;
+    }
+
+    .nps-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .nps-btn.selected {
+      background: var(--burgundy);
+      border-color: var(--burgundy);
+      color: var(--white);
+    }
+
+    .nps-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Pill checkboxes ── */
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill-label {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      cursor: pointer;
+    }
+
+    .pill-label input { display: none; }
+
+    .pill {
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-family: var(--sans);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 1px;
+    }
+
+    .pill-label input:checked + .pill {
+      background: var(--burgundy);
+      border-color: var(--burgundy);
+      color: var(--white);
+    }
+
+    .pill:hover { border-color: var(--pink-muted); color: var(--pink); }
+
+    /* ── Submit button ── */
+    .submit-wrap {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .btn-submit {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 18px 52px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.35s ease;
+      border-radius: 1px;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-submit:hover { color: var(--bg); }
+    .btn-submit:hover::before { transform: translateX(0); }
+
+    .btn-submit span { position: relative; z-index: 1; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 52px;
+    }
+
+    /* ── Success state ── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .success-screen.visible { display: block; }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 24px;
+      animation: pulse 1.5s ease infinite;
+    }
+
+    .success-screen h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    .success-screen h2 em { font-style: italic; color: var(--pink); }
+
+    .success-screen p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* ── Required asterisk ── */
+    .req { color: var(--burgundy); margin-left: 3px; }
+
+    /* ── Helper text ── */
+    .helper {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <p class="logo-mark">Nailed by Mbuyi — Mbabane, Eswatini</p>
+    <h1>Client <em>Feedback</em></h1>
+    <p class="hero-sub">Your experience. Your voice. Our commitment.</p>
+  </header>
+
+  <!-- Main form -->
+  <main class="page" id="formPage">
+
+    <!-- Section 1: Client details -->
+    <div class="form-section">
+      <p class="section-label">01</p>
+      <h2 class="section-title">Tell us a little about <em>yourself</em></h2>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" id="clientName" placeholder="Optional" />
+        </div>
+        <div class="field">
+          <label>WhatsApp / Phone</label>
+          <input type="text" id="clientPhone" placeholder="Optional" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Date of your visit <span class="req">*</span></label>
+        <input type="date" id="visitDate" required />
+      </div>
+
+      <div class="field">
+        <label>Service received <span class="req">*</span></label>
+        <select id="serviceSelect" required>
+          <option value="" disabled selected>Select your service</option>
+          <option>Gel Overlay — E200</option>
+          <option>Buff & Shine — E150</option>
+          <option>Rubberbase + Colour — E250</option>
+          <option>Rubberbase + Medium Art — E270</option>
+          <option>Rubberbase + Advanced Art — E290</option>
+          <option>Advanced Nail Art — E290</option>
+          <option>Mini Manicure (Kids) — E80–E120</option>
+          <option>Pedicure</option>
+          <option>Multiple / Package</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 2: Star ratings -->
+    <div class="form-section">
+      <p class="section-label">02</p>
+      <h2 class="section-title">Rate your <em>experience</em></h2>
+
+      <div class="rating-grid" id="ratingsGrid">
+        <div class="rating-row" data-key="overall">
+          <span class="rating-row-label">Overall experience</span>
+          <div class="stars">
+            <button class="star-btn" data-val="1" aria-label="1 star">★</button>
+            <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
+            <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
+            <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
+            <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+        <div class="rating-row" data-key="quality">
+          <span class="rating-row-label">Nail quality & finish</span>
+          <div class="stars">
+            <button class="star-btn" data-val="1" aria-label="1 star">★</button>
+            <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
+            <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
+            <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
+            <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+        <div class="rating-row" data-key="hygiene">
+          <span class="rating-row-label">Hygiene & cleanliness</span>
+          <div class="stars">
+            <button class="star-btn" data-val="1" aria-label="1 star">★</button>
+            <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
+            <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
+            <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
+            <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+        <div class="rating-row" data-key="value">
+          <span class="rating-row-label">Value for money</span>
+          <div class="stars">
+            <button class="star-btn" data-val="1" aria-label="1 star">★</button>
+            <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
+            <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
+            <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
+            <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+        <div class="rating-row" data-key="artist">
+          <span class="rating-row-label">Artist skill & attention to detail</span>
+          <div class="stars">
+            <button class="star-btn" data-val="1" aria-label="1 star">★</button>
+            <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
+            <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
+            <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
+            <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 3: NPS -->
+    <div class="form-section">
+      <p class="section-label">03</p>
+      <h2 class="section-title">Would you <em>recommend</em> us?</h2>
+
+      <div class="nps-track" id="npsTrack"></div>
+      <div class="nps-labels">
+        <span>Never</span>
+        <span>Absolutely</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 4: Discovery + highlight -->
+    <div class="form-section">
+      <p class="section-label">04</p>
+      <h2 class="section-title">Your visit, <em>in your words</em></h2>
+
+      <div class="field">
+        <label>What stood out most? (Optional)</label>
+        <div class="pills" id="highlightPills">
+          <label class="pill-label"><input type="checkbox" value="nail_design" /><span class="pill">Nail Design</span></label>
+          <label class="pill-label"><input type="checkbox" value="cleanliness" /><span class="pill">Cleanliness</span></label>
+          <label class="pill-label"><input type="checkbox" value="atmosphere" /><span class="pill">Atmosphere</span></label>
+          <label class="pill-label"><input type="checkbox" value="duration" /><span class="pill">Speed</span></label>
+          <label class="pill-label"><input type="checkbox" value="communication" /><span class="pill">Communication</span></label>
+          <label class="pill-label"><input type="checkbox" value="value" /><span class="pill">Value</span></label>
+          <label class="pill-label"><input type="checkbox" value="precision" /><span class="pill">Precision</span></label>
+          <label class="pill-label"><input type="checkbox" value="products" /><span class="pill">Products Used</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How did you find us?</label>
+        <select id="howFound">
+          <option value="" disabled selected>Select one</option>
+          <option>Instagram (@nailed_by_mbuyi)</option>
+          <option>Word of mouth / Referral</option>
+          <option>WhatsApp</option>
+          <option>Walked past</option>
+          <option>Returning client</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 5: Open feedback -->
+    <div class="form-section">
+      <p class="section-label">05</p>
+      <h2 class="section-title">Anything else you'd like us to <em>know?</em></h2>
+
+      <div class="field">
+        <label>Compliments, suggestions, or requests</label>
+        <textarea id="openFeedback" placeholder="Share your thoughts freely — every word helps us improve…"></textarea>
+        <p class="helper">All feedback is read personally by the studio.</p>
+      </div>
+
+      <div class="field">
+        <label>Would you like us to follow up?</label>
+        <div class="pills" id="followupPills">
+          <label class="pill-label"><input type="radio" name="followup" value="yes" /><span class="pill">Yes, reach out</span></label>
+          <label class="pill-label"><input type="radio" name="followup" value="no" /><span class="pill">No, stay anonymous</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap form-section">
+      <button class="btn-submit" id="submitBtn" type="button">
+        <span>Submit Feedback</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Success screen -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✦</div>
+    <h2>Thank you for your <em>kindness</em></h2>
+    <p>Your feedback means everything. It helps Nailed by Mbuyi continue delivering beautiful, detail-driven work — one set at a time.</p>
+  </div>
+
+  <footer>
+    <a href="https://wa.me/26878166787" target="_blank">WhatsApp</a> &nbsp;·&nbsp;
+    <a href="https://instagram.com/nailed_by_mbuyi" target="_blank">@nailed_by_mbuyi</a> &nbsp;·&nbsp;
+    Mbabane, Opposite Eswatini Railway
+  </footer>
+
+  <script>
+    // ── Star ratings ──
+    const ratings = {};
+
+    document.querySelectorAll('.rating-row').forEach(row => {
+      const key = row.dataset.key;
+      ratings[key] = 0;
+      const stars = row.querySelectorAll('.star-btn');
+
+      stars.forEach(btn => {
+        btn.addEventListener('mouseenter', () => highlight(stars, +btn.dataset.val));
+        btn.addEventListener('mouseleave', () => highlight(stars, ratings[key]));
+        btn.addEventListener('click', () => {
+          ratings[key] = +btn.dataset.val;
+          highlight(stars, ratings[key]);
+        });
+      });
+    });
+
+    function highlight(stars, val) {
+      stars.forEach(s => s.classList.toggle('filled', +s.dataset.val <= val));
+    }
+
+    // ── NPS ──
+    let npsScore = null;
+    const npsTrack = document.getElementById('npsTrack');
+
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'nps-btn';
+      btn.textContent = i;
+      btn.setAttribute('aria-label', `Score ${i}`);
+      btn.addEventListener('click', () => {
+        npsScore = i;
+        document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+      npsTrack.appendChild(btn);
+    }
+
+    // ── Submit ──
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const date = document.getElementById('visitDate').value;
+      const service = document.getElementById('serviceSelect').value;
+
+      if (!date || !service) {
+        alert('Please fill in the date of visit and service received.');
+        return;
+      }
+
+      // Gather data (in a real deployment, POST to Formspree or similar)
+      const payload = {
+        name: document.getElementById('clientName').value || 'Anonymous',
+        phone: document.getElementById('clientPhone').value,
+        visitDate: date,
+        service: service,
+        ratings: { ...ratings },
+        nps: npsScore,
+        highlights: [...document.querySelectorAll('#highlightPills input:checked')].map(i => i.value),
+        howFound: document.getElementById('howFound').value,
+        feedback: document.getElementById('openFeedback').value,
+        followup: document.querySelector('input[name="followup"]:checked')?.value || 'no',
+        submittedAt: new Date().toISOString()
+      };
+
+      console.log('Feedback payload:', payload);
+
+      // Transition to success
+      document.getElementById('formPage').style.display = 'none';
+      const success = document.getElementById('successScreen');
+      success.classList.add('visible');
+      success.style.opacity = 0;
+      setTimeout(() => {
+        success.style.transition = 'opacity 0.8s ease';
+        success.style.opacity = 1;
+      }, 50);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>
